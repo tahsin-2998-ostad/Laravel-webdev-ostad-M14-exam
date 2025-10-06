@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>K-Drama Directory - Live Test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(to bottom, #1a1a2e, #16213e);
+        color: #fff;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        padding: 30px 0;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: #e94560;
+      }
+
+      .header p {
+        color: #a8b2d1;
+        font-size: 1.1rem;
+      }
+
+      .stats {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.2rem;
+        color: #64ffda;
+      }
+
+      .drama-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .drama-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .drama-card:hover {
+        transform: translateY(-5px);
+        border-color: #e94560;
+        box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+      }
+
+      .drama-title {
+        font-size: 1.4rem;
+        color: #e94560;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      .drama-year {
+        color: #64ffda;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+
+      .drama-genre {
+        color: #a8b2d1;
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+        font-style: italic;
+      }
+
+      .drama-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .drama-rating {
+        color: #ffd700;
+        font-weight: bold;
+      }
+
+      .drama-episodes {
+        color: #a8b2d1;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 50px;
+        color: #a8b2d1;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🎬 K-Drama Directory</h1>
+      <p>Explore the best Korean dramas</p>
+    </div>
+
+    <div class="stats">
+      Total Dramas Available: <span id="totalCount">0</span>
+    </div>
+
+    <div class="drama-container" id="dramaContainer">
+      <!-- Drama cards will be added here dynamically using JavaScript -->
+    </div>
+
+    <div class="footer">
+      <p>
+        Made with ❤️ for K-Drama Fans By
+        <a style="color: #e94560" href="https://github.com/mabdusshakur"
+          >Shakur (The Panda)</a
+        >
+      </p>
+    </div>
+
+    <script>
+      // ============================================
+      // K-DRAMA DATA - DO NOT MODIFY THIS ARRAY
+      // ============================================
+      const kdramas = [
+        {
+          title: "Crash Landing on You",
+          year: 2019,
+          genre: "Romance, Comedy, Drama",
+          rating: 9.1,
+          episodes: 16,
+        },
+        {
+          title: "Squid Game",
+          year: 2021,
+          genre: "Thriller, Drama, Mystery",
+          rating: 8.9,
+          episodes: 9,
+        },
+        {
+          title: "Queen of Tears",
+          year: 2024,
+          genre: "Romance, Drama",
+          rating: 9.3,
+          episodes: 16,
+        },
+        {
+          title: "Lovely Runner",
+          year: 2024,
+          genre: "Romance, Fantasy, Comedy",
+          rating: 9.2,
+          episodes: 16,
+        },
+        {
+          title: "Hospital Playlist",
+          year: 2020,
+          genre: "Medical, Slice of Life",
+          rating: 9.0,
+          episodes: 12,
+        },
+        {
+          title: "Moving",
+          year: 2023,
+          genre: "Action, Fantasy, Drama",
+          rating: 9.1,
+          episodes: 20,
+        },
+        {
+          title: "Vincenzo",
+          year: 2021,
+          genre: "Crime, Comedy, Drama",
+          rating: 8.8,
+          episodes: 20,
+        },
+        {
+          title: "Business Proposal",
+          year: 2022,
+          genre: "Romance, Comedy",
+          rating: 8.7,
+          episodes: 12,
+        },
+        {
+          title: "Alchemy of Souls",
+          year: 2022,
+          genre: "Fantasy, Romance, Action",
+          rating: 9.0,
+          episodes: 30,
+        },
+        {
+          title: "Twinkling Watermelon",
+          year: 2023,
+          genre: "Fantasy, Drama, Music",
+          rating: 9.2,
+          episodes: 16,
+        },
+        {
+          title: "Our Unwritten Seoul",
+          year: 2024,
+          genre: "Romance, Drama",
+          rating: 8.9,
+          episodes: 12,
+        },
+        {
+          title: "The Glory",
+          year: 2022,
+          genre: "Thriller, Drama, Revenge",
+          rating: 8.8,
+          episodes: 16,
+        },
+      ];
+
+      // Random emoji set
+      const emojis = [
+        "🎬",
+        "💖",
+        "🕵️‍♂️",
+        "😂",
+        "🧩",
+        "⚡",
+        "🏥",
+        "🎭",
+        "🌟",
+        "🧙‍♂️",
+        "🎵",
+        "🔥",
+        "💼",
+        "👑",
+        "🚀",
+        "🧡",
+        "💫",
+        "🌀",
+        "🧠",
+        "🗡️",
+      ];
+
+      // ============================================
+      // YOUR CODE STARTS HERE
+      // ============================================
+
+      // Step 1: Get the container element where cards will be added
+      // Hint: document.getElementById('dramaContainer');
+      const dramaContainer = document.getElementById("dramaContainer");
+
+      // Step 2: Get the total count element
+      // Hint: document.getElementById('totalCount');
+      const totalCount = document.getElementById("totalCount");
+
+      // TODO: Create a function that returns a random emoji from the `emojis` array
+      function getRandomEmoji() {
+        const randomIndex = Math.floor(Math.random() * emojis.length);
+        return emojis[randomIndex];
+      }
+
+      // Step 2: Create a function to display all dramas
+      function displayDramas() {
+        // TODO: Use forEach to loop through the kdramas array
+        // Hint: kdramas.forEach(function(drama) { ... })
+
+        // TODO: Inside forEach, create a div element for each drama card
+        // Hint: document.createElement('div');
+
+        // TODO: Add the 'drama-card' class to the card
+
+        // TODO: Pick a random emoji for this drama card using the getRandomEmoji function
+
+        // TODO: Set the innerHTML of the card with drama information
+        // Use template literals (backticks) to create the HTML structure
+        // Include: emoji, title, year, genre, rating, and episodes
+        // Example structure:
+        /*
+              card.innerHTML = `
+                  <div class="drama-title">${emoji}${drama.title}</div>
+                  <div class="drama-year">Year: ${drama.year}</div>
+                  <div class="drama-genre">drama.genre</div>
+                  <div class="drama-info">
+                    <div class="drama-rating">⭐ drama.rating</div>
+                  ... add more fields here similar to the example site given on requirement...
+              `;
+              */
+
+        // TODO: Append the card to dramaContainer
+        // Hint: dramaContainer.appendChild(card);
+        kdramas.forEach(function (drama) {
+          // Create card element
+          const card = document.createElement("div");
+          card.classList.add("drama-card");
+
+          // Pick random emoji
+          const emoji = getRandomEmoji();
+
+          // Set innerHTML
+          card.innerHTML = `
+            <div class="drama-title">${emoji} ${drama.title}</div>
+            <div class="drama-year">📅 Year: ${drama.year}</div>
+            <div class="drama-genre">🎭 Genre: ${drama.genre}</div>
+            <div class="drama-info">
+                <div class="drama-rating">⭐ Rating: ${drama.rating}</div>
+                <div class="drama-episodes">🎞️ Episodes: ${drama.episodes}</div>
+            </div>
+        `;
+
+          // Append card to container
+          dramaContainer.appendChild(card);
+        });
+      }
+
+      // Step 3: Create a function to update the total count
+      function updateTotalCount() {
+        // TODO: Get the length of kdramas array
+        // TODO: Update the totalCount element's textContent
+        // Hint: totalCount.textContent = array.length;
+        totalCount.textContent = kdramas.length;
+      }
+
+      // Step 4: Call the functions when page loads
+      // TODO: Call displayDramas() function
+      displayDramas();
+      // TODO: Call updateTotalCount() function
+      updateTotalCount();
+      // ============================================
+      // YOUR CODE ENDS HERE
+      // ============================================
+    </script>
+  </body>
+</html>
